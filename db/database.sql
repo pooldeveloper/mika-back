@@ -39,7 +39,8 @@ CREATE TABLE preguntas (
     solucion_img VARCHAR(255) NOT NULL,
     año VARCHAR(255) NOT NULL,
     clave VARCHAR(255) NOT NULL,
-    orden INT
+    orden INT NOT NULL,
+    numero INT NOT NULL
 );
 
 DESCRIBE preguntas;

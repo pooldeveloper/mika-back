@@ -76,15 +76,15 @@ export const crearPreguntas = async (req, res) => {
     const { universidad_id, curso_id, preguntas } = req.body
 
     for (const pregunta of preguntas) {
-        const { tema_id, pregunta_img, solucion_img, año, clave, orden } = pregunta;
+        const { tema_id, pregunta_img, solucion_img, año, clave, orden, numero } = pregunta;
 
         await pool.query(
-            'INSERT INTO preguntas (universidad_id, curso_id, tema_id, pregunta_img, solucion_img, año, clave, orden) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-            [universidad_id, curso_id, tema_id, pregunta_img, solucion_img, año, clave, orden]
+            'INSERT INTO preguntas (universidad_id, curso_id, tema_id, pregunta_img, solucion_img, año, clave, orden, numero) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [universidad_id, curso_id, tema_id, pregunta_img, solucion_img, año, clave, orden, numero]
         );
     }
 
-    res.send({ mensaje: 'Preguntas creados exitosamente' })
+    res.send({ mensaje: 'Preguntas creadas exitosamente' })
 }
 
 const funcionObtenerPreguntas = async (id, anio) => {
