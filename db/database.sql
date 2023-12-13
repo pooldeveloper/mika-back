@@ -14,7 +14,7 @@ CREATE TABLE cursos (
 	nombre_id VARCHAR(255) NOT NULL,
     nombre VARCHAR(255) NOT NULL,
     universidad_id VARCHAR(255) NOT NULL,
-    orden INT
+    orden INT NOT NULL
 );
 
 DESCRIBE cursos;
@@ -25,7 +25,7 @@ CREATE TABLE temas (
     curso_id VARCHAR(255) NOT NULL,
     nombre_id VARCHAR(255) NOT NULL,
     nombre VARCHAR(255) NOT NULL,
-    orden INT
+    orden INT NOT NULL
 );
 
 DESCRIBE temas;
@@ -35,12 +35,19 @@ CREATE TABLE preguntas (
     universidad_id VARCHAR(255) NOT NULL,
     curso_id VARCHAR(255) NOT NULL,
     tema_id VARCHAR(255) NOT NULL,
-    pregunta_img VARCHAR(255) NOT NULL,
-    solucion_img VARCHAR(255) NOT NULL,
+    pregunta_img VARCHAR(255),
+    solucion_img VARCHAR(255),
     año VARCHAR(255) NOT NULL,
     clave VARCHAR(255) NOT NULL,
     orden INT NOT NULL,
-    numero INT NOT NULL
+    numero INT NOT NULL,
+    pregunta_texto LONGTEXT,
+    solucion_texto LONGTEXT,
+    clave_a VARCHAR(255),
+    clave_b VARCHAR(255),
+    clave_c VARCHAR(255),
+    clave_d VARCHAR(255),
+    clave_e VARCHAR(255)
 );
 
 DESCRIBE preguntas;
@@ -50,11 +57,9 @@ CREATE TABLE examenes (
     nombre VARCHAR(255) NOT NULL,
     universidad_id VARCHAR(255) NOT NULL,
 	año VARCHAR(255) NOT NULL,
-    instrucciones VARCHAR(255) NOT NULL,
+    instrucciones LONGTEXT NOT NULL,
     minutos int NOT NULL
 );
 
 DESCRIBE examenes;
 
-DELETE FROM cursos WHERE universidad_id = 'villareal';
-SELECT * FROM preguntas;

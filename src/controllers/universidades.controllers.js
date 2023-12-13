@@ -1,4 +1,6 @@
-import { pool } from "../db.js"
+import { pool } from "../config/db.js"
+import {uploadImage} from "../config/cloudinary.js"
+
 
 export const obtenerUniversidades = async (req, res) => {
     const [rows] = await pool.query('SELECT * FROM universidades')
@@ -73,18 +75,20 @@ export const obtenerTemas = async (req, res) => {
 
 export const crearPreguntas = async (req, res) => {
 
-    const { universidad_id, curso_id, preguntas } = req.body
+    const { universidad_id, curso_id, tema_id, anio, clave, orden, numero, pregunta_texto, solucion_texto, clave_a, clave_b, clave_c, clave_d, clave_e } = req.body
 
-    for (const pregunta of preguntas) {
-        const { tema_id, pregunta_img, solucion_img, año, clave, orden, numero } = pregunta;
 
-        await pool.query(
-            'INSERT INTO preguntas (universidad_id, curso_id, tema_id, pregunta_img, solucion_img, año, clave, orden, numero) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            [universidad_id, curso_id, tema_id, pregunta_img, solucion_img, año, clave, orden, numero]
-        );
-    }
+    const preguntaImg = await uploadImage(req.files.pregunta_img.tempFilePath)
 
-    res.send({ mensaje: 'Preguntas creadas exitosamente' })
+    const solucionImg = await uploadImage(req.files.solucion_img.tempFilePath)
+
+
+    const [rows] = await pool.query(
+        'INSERT INTO preguntas (universidad_id, curso_id, tema_id, pregunta_img, solucion_img, año, clave, orden, numero, pregunta_texto, solucion_texto, clave_a, clave_b, clave_c, clave_d, clave_e ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [universidad_id, curso_id, tema_id, preguntaImg.url, solucionImg.url, anio, clave, orden, numero, pregunta_texto, solucion_texto, clave_a, clave_b, clave_c, clave_d, clave_e ]
+    );
+
+    res.send({mensaje: "Pregunta creada exitosamente"})
 }
 
 const funcionObtenerPreguntas = async (id, anio) => {
@@ -186,7 +190,13 @@ export const enviarRespuestas = async (req, res) => {
                     clave_enviada: claveEnviada,
                     clave_correcta: claveCorrecta,
                     orden: pregunta.orden,
-                    correcta: esCorrecta // Asignar el valor calculado
+                    correcta: esCorrecta, // Asignar el valor calculado
+                    numero: pregunta.numero,
+                    clave_a: pregunta.clave_a,
+                    clave_b: pregunta.clave_b,
+                    clave_c: pregunta.clave_c,
+                    clave_d: pregunta.clave_d,
+                    clave_e: pregunta.clave_e,
                 };
 
                 cursoRespuestas.preguntas.push(preguntaRespuesta);
@@ -194,7 +204,7 @@ export const enviarRespuestas = async (req, res) => {
             estadisticas.solucionario.push(cursoRespuestas);
         }
 
-        estadisticas.puntaje = (estadisticas.correctas * 20) - (estadisticas.incorrectas * 1.125)
+        estadisticas.puntaje = (estadisticas.correctas * 10) - (estadisticas.incorrectas * 0.25219265)
 
         return estadisticas;
     }
