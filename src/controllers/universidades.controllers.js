@@ -197,6 +197,8 @@ export const enviarRespuestas = async (req, res) => {
                     clave_c: pregunta.clave_c,
                     clave_d: pregunta.clave_d,
                     clave_e: pregunta.clave_e,
+                    pregunta_texto: pregunta.pregunta_texto,
+                    solucion_texto: pregunta.solucion_texto
                 };
 
                 cursoRespuestas.preguntas.push(preguntaRespuesta);
