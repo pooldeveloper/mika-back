@@ -77,13 +77,16 @@ export const crearPreguntas = async (req, res) => {
 
     const { universidad_id, curso_id, tema_id, anio, clave, orden, numero, pregunta_texto, solucion_texto, clave_a, clave_b, clave_c, clave_d, clave_e } = req.body
 
+    let preguntaImg = ''
+    let solucionImg = ''
 
-    const preguntaImg = await uploadImage(req.files.pregunta_img.tempFilePath)
+    if(req.files){
+        const preguntaImg = await uploadImage(req.files.pregunta_img.tempFilePath)
 
-    const solucionImg = await uploadImage(req.files.solucion_img.tempFilePath)
+        const solucionImg = await uploadImage(req.files.solucion_img.tempFilePath)
+    }
 
-
-    const [rows] = await pool.query(
+    await pool.query(
         'INSERT INTO preguntas (universidad_id, curso_id, tema_id, pregunta_img, solucion_img, año, clave, orden, numero, pregunta_texto, solucion_texto, clave_a, clave_b, clave_c, clave_d, clave_e ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [universidad_id, curso_id, tema_id, preguntaImg.url, solucionImg.url, anio, clave, orden, numero, pregunta_texto, solucion_texto, clave_a, clave_b, clave_c, clave_d, clave_e ]
     );
@@ -198,7 +201,8 @@ export const enviarRespuestas = async (req, res) => {
                     clave_d: pregunta.clave_d,
                     clave_e: pregunta.clave_e,
                     pregunta_texto: pregunta.pregunta_texto,
-                    solucion_texto: pregunta.solucion_texto
+                    solucion_texto: pregunta.solucion_texto,
+                    tema_id: pregunta.tema_id
                 };
 
                 cursoRespuestas.preguntas.push(preguntaRespuesta);
